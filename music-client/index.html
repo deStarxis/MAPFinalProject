@@ -19,15 +19,23 @@
   <body>
     <div class="container">
       <header id="header">
-        <div id="left">Your Logo here</div>
+        <div id="left">
+          <a href=""
+            ><img
+              src="./public/logo.png"
+              style="display: inline"
+              width="60"
+              height="60"
+          /></a>
+        </div>
         <div id="right">
           <div id="search">
             <input id="search-input" />
             <button class="btn btn-primary">Search</button>
           </div>
           <div id="login-div">
-            <input id="username" />
-            <input id="password" />
+            <input id="username" required />
+            <input id="password" required />
             <button class="btn btn-primary" id="loginBtn">Login</button>
             <div id="errormessage"></div>
           </div>
