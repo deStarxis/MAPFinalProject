@@ -1,0 +1,26 @@
+.container {
+    margin-top: 10px;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#header #right {
+    width: 650px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#header #search {
+    display: none;
+}
+
+#header #logout-div {
+    display: none;
+}
+
+#errormessage {
+    color: red;
+}
