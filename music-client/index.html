@@ -18,23 +18,27 @@
 
   <body>
     <div class="container">
-      <header id="header">
-        <div id="left">
-          <a href=""
+      <header id="header" class="header">
+        <div id="left" class="header-left">
+          <a
+            href="file:///F:/615425_UjjwalHumagain/4MAP%20(CS445-2022-11A-11D-01)/Project/MAPFinalProject/music-client/index.html"
+            class="navbar-brand"
             ><img
+              class="logo"
               src="./public/logo.png"
               style="display: inline"
-              width="60"
-              height="60"
+              width="15%"
           /></a>
         </div>
-        <div id="right">
+        <div id="right" class="header-right">
           <div id="search">
             <input id="search-input" />
             <button class="btn btn-primary">Search</button>
           </div>
           <div id="login-div">
+            <label for="username">Username</label>
             <input id="username" required />
+            <label for="password">Password</label>
             <input id="password" required />
             <button class="btn btn-primary" id="loginBtn">Login</button>
             <div id="errormessage"></div>
@@ -44,7 +48,7 @@
           </div>
         </div>
       </header>
-      <div id="content">Welcome to MIU Music Station</div>
+      <div id="content" class="text text-center"></div>
     </div>
   </body>
 </html>

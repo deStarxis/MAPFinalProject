@@ -1,11 +1,12 @@
 const SERVER_ROOT = "http://localhost:3000";
 window.onload = function () {
-  if (localStorage.getItem("accessToken")) {
-    afterLogin();
-  } else {
-    notLogin();
-  }
+  accessibility();
+  login();
+  logout();
+};
 
+// login function
+function login() {
   document.getElementById("loginBtn").onclick = function () {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
@@ -21,45 +22,47 @@ window.onload = function () {
       },
     })
       .then((response) => response.json())
-      .then((data) => loggedInFeatures(data));
+      .then((data) => {
+        loggedInFeatures(data);
+      });
   };
+}
 
+// logout function
+const logout = () => {
   document.getElementById("logoutBtn").onclick = function () {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userToken");
     notLogin();
   };
 };
 
+// accessibility
+const accessibility = () => {
+  if (localStorage.getItem("userToken")) {
+    afterLogin();
+  } else {
+    notLogin();
+  }
+};
+
 function loggedInFeatures(data) {
+  console.log(data);
   if (data.status) {
     document.getElementById("errormessage").innerHTML = data.message;
   } else {
     document.getElementById("username").value = "";
     document.getElementById("password").value = "";
-    localStorage.setItem("accessToken", data.accessToken);
+    document.getElementById("errormessage").innerHTML = "";
+    localStorage.setItem("userToken", data.accessToken);
     afterLogin();
   }
 }
-
-function fetchMusic() {
-  fetch(`${SERVER_ROOT}/api/music`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((songs) => console.log(songs));
-}
-
-function fetchPlayList() {}
 
 function afterLogin() {
   document.getElementById("search").style.display = "block";
   document.getElementById("logout-div").style.display = "block";
   document.getElementById("login-div").style.display = "none";
-  fetchMusic();
-  fetchPlayList();
-  document.getElementById("content").innerHTML = "Content of the music";
+  document.getElementById("content").innerHTML = "Content";
 }
 
 function notLogin() {
