@@ -32,8 +32,10 @@
         </div>
         <div id="right" class="header-right">
           <div id="search">
-            <input id="search-input" />
-            <button class="btn btn-primary">Search</button>
+            <form>
+              <input id="search-input" required />
+              <button class="btn btn-primary">Search</button>
+            </form>
           </div>
           <div id="login-div">
             <label for="username">Username</label>
@@ -48,7 +50,19 @@
           </div>
         </div>
       </header>
-      <div id="content" class="text text-center"></div>
+      <div id="content" class="text">
+        <div id="notLogin" style="display: none">Welcome to MIU Station</div>
+        <div id="afterLogin" style="display: none">
+          <div id="songs-div">
+            <h3>Songs you may like</h3>
+            <table id="songs"></table>
+          </div>
+          <div id="playlist-div" style="margin-top: 25px; margin-bottom: 25px">
+            <h3>Your Playlist</h3>
+            <table id="playlist"></table>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
