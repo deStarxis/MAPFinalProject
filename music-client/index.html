@@ -37,8 +37,13 @@
         <div id="right" class="header-right">
           <div id="search">
             <form>
-              <input id="search-input" required />
-              <button class="btn btn-primary" id="searchButton">Search</button>
+              <input
+                type="search"
+                aria-label="Search"
+                id="search-input"
+                placeholder="Search for a song"
+                class="form-control"
+              />
             </form>
           </div>
           <div id="login-div">
@@ -61,9 +66,19 @@
             <h5 style="color: #3becb7">Songs you may like</h5>
             <table id="songs"></table>
           </div>
-          <div id="playlist-div" style="margin-top: 25px; margin-bottom: 25px">
-            <h5 style="color: #30f10a">Your Playlist</h5>
-            <table id="playlist"></table>
+          <div style="justify-content: space-evenly">
+            <div
+              id="playlist-div"
+              style="
+                margin-top: 25px;
+                margin-bottom: 25px;
+                float: left;
+                width: 50%;
+              "
+            >
+              <h5 style="color: #30f10a">Your Playlist</h5>
+              <table id="playlist"></table>
+            </div>
           </div>
         </div>
       </div>

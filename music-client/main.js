@@ -1,4 +1,5 @@
 const SERVER_ROOT = "http://localhost:3000";
+var PLAYLIST = [];
 window.onload = function () {
   accessibility();
   login();
@@ -60,7 +61,7 @@ function loggedInFeatures(data) {
 
 // search the music
 function searchMusic() {
-  document.getElementById("searchButton").onclick = function (event) {
+  document.getElementById("search-input").onkeyup = function (event) {
     event.preventDefault();
     const songTitle = document.getElementById("search-input").value;
     fetch(`${SERVER_ROOT}/api/music?search=${songTitle}`, {
@@ -109,7 +110,7 @@ function loadMusic(songs) {
         <td>${song.releaseDate}</td>
         <td>
           <button title="Add to Playlist"
-            onclick="addToPlaylist(${song.id.toString()});">
+            onclick="addToPlaylist('${song.id}');">
             <i class="fa fa-plus"></i> Add to Playlist
             </button>
         </td>
@@ -124,8 +125,29 @@ function loadMusic(songs) {
   document.getElementById("songs").innerHTML = html;
 }
 
+// add to playlist
 function addToPlaylist(id) {
-  console.log(id);
+  const songId = id;
+  for (song of PLAYLIST) {
+    if (song.songId === songId) {
+      return alert("Song already added in Playlist");
+    }
+  }
+  fetch(`${SERVER_ROOT}/api/playlist/add`, {
+    method: "POST",
+    body: JSON.stringify({
+      songId,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+    },
+  })
+    .then((data) => data.json())
+    .then((songs) => {
+      loadPlaylist(songs);
+      PLAYLIST = songs;
+    });
 }
 
 // display the playlist
@@ -138,6 +160,7 @@ function fetchPlayList() {
     .then((response) => response.json())
     .then((playlists) => {
       loadPlaylist(playlists);
+      PLAYLIST = playlists;
     });
 }
 
@@ -153,17 +176,16 @@ function loadPlaylist(playlists) {
   if (playlists.length !== 0) {
     playlists.forEach((playlist) => {
       html += `
-      <tr id="tr${playlist.id}" data-id="${playlist.id}">
+      <tr id="tr${playlist.id}" data-id="${`${playlist.id}`}">
           <td>${playlist.orderId}</td>
           <td>${playlist.title}</td>
           <td>
-          <button title="Play Song" onclick="playSong(${playlist.id});">
+          <button title="Play Song" onclick="playSong('${playlist.id}');">
           <i class="fa fa-play" style="color:red;"></i>
           </button>
-          <button title="Play Song" onclick="playSong(${playlist.id});">
-          <i class="fa fa-pause" style="color:red;"></i>
-          </button>
-          <button title="Remove from Playlist" onclick="removeFromPlaylist(${playlist.id});">
+          <button title="Remove from Playlist" onclick="removeFromPlaylist('${
+            playlist.songId
+          }');">
           <i class="fa fa-trash" style="color:red;"></i>
           </button>
           </td>
@@ -177,13 +199,25 @@ function loadPlaylist(playlists) {
   }
   document.getElementById("playlist").innerHTML = html;
 }
-function playSong(id) {
-  console.log(typeof id);
-}
 
+//remove from playlist
 function removeFromPlaylist(id) {
-  document.getElementById("tr" + id).remove();
-  // fetchPlayList();
+  const songId = id;
+  fetch(`${SERVER_ROOT}/api/playlist/remove`, {
+    method: "POST",
+    body: JSON.stringify({
+      songId,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+    },
+  })
+    .then((data) => data.json())
+    .then((songs) => {
+      loadPlaylist(songs);
+      PLAYLIST = songs;
+    });
 }
 
 function afterLogin() {
