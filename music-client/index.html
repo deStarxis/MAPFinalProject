@@ -12,6 +12,10 @@
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <link href="./main.css" rel="stylesheet" type="text/css" />
     <script src="./main.js" type="text/javascript"></script>
   </head>
@@ -34,7 +38,7 @@
           <div id="search">
             <form>
               <input id="search-input" required />
-              <button class="btn btn-primary">Search</button>
+              <button class="btn btn-primary" id="searchButton">Search</button>
             </form>
           </div>
           <div id="login-div">
@@ -54,11 +58,11 @@
         <div id="notLogin" style="display: none">Welcome to MIU Station</div>
         <div id="afterLogin" style="display: none">
           <div id="songs-div">
-            <h3>Songs you may like</h3>
+            <h5 style="color: #3becb7">Songs you may like</h5>
             <table id="songs"></table>
           </div>
           <div id="playlist-div" style="margin-top: 25px; margin-bottom: 25px">
-            <h3>Your Playlist</h3>
+            <h5 style="color: #30f10a">Your Playlist</h5>
             <table id="playlist"></table>
           </div>
         </div>
