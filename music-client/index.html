@@ -17,7 +17,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
     <link href="./main.css" rel="stylesheet" type="text/css" />
-    <script src="./main.js" type="text/javascript"></script>
   </head>
 
   <body>
@@ -52,7 +51,6 @@
             <label for="password">Password</label>
             <input id="password" required />
             <button class="btn btn-primary" id="loginBtn">Login</button>
-            <div id="errormessage"></div>
           </div>
           <div id="logout-div">
             <button class="btn btn-primary" id="logoutBtn">Logout</button>
@@ -79,9 +77,57 @@
               <h5 style="color: #30f10a">Your Playlist</h5>
               <table id="playlist"></table>
             </div>
+            <div
+              id="playSongs"
+              ,
+              style="
+                margin-top: 25px;
+                margin-bottom: 25px;
+                float: right;
+                margin-right: 10px;
+                width: 40%;
+              "
+            >
+              <h5 style="color: #30f10a">Your Play</h5>
+              <div id="playSong">
+                <p id="songTitle">Song Title</p>
+                <audio id="audio" preload="metadata">fsdfsdf</audio>
+                <div id="progress-bar">
+                  <div id="current-progress"></div>
+                </div>
+                <div class="time-container">
+                  <span id="current-time">0:00</span>
+                  <span id="max-duration">0:00</span>
+                </div>
+                <button
+                  id="shuffle"
+                  title="Shuffle Play"
+                  style="background: none"
+                >
+                  <i class="fa fa-random"></i>
+                </button>
+                <button title="Previous Song" id="previous">
+                  <i class="fa fa-step-backward" style="color: red"></i>
+                </button>
+                <button title="Play Song" id="play">
+                  <i class="fa fa-play" style="color: red"></i>
+                </button>
+                <button title="Pause Song" id="pause" class="hide">
+                  <i class="fa fa-pause" style="color: red"></i>
+                </button>
+                <button title="Next Song" id="next">
+                  <i class="fa fa-step-forward" style="color: red"></i>
+                </button>
+                <button id="repeat" title="Repeat" style="background: none">
+                  <i class="fa fa-repeat"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <div id="snackbar">Some text some message..</div>
   </body>
+  <script src="./main.js" type="text/javascript"></script>
 </html>
