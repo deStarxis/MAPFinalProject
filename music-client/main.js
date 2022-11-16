@@ -25,6 +25,9 @@ function login() {
       .then((response) => response.json())
       .then((data) => {
         loggedInFeatures(data);
+      })
+      .catch((err) => {
+        console.log(new Error(err));
       });
   };
 }
@@ -33,6 +36,7 @@ function login() {
 const logout = () => {
   document.getElementById("logoutBtn").onclick = function () {
     localStorage.removeItem("userToken");
+    localStorage.removeItem("playType");
     notLogin();
     showToast("Logged Out!!", "red");
   };
@@ -55,6 +59,7 @@ function loggedInFeatures(data) {
     document.getElementById("username").value = "";
     document.getElementById("password").value = "";
     localStorage.setItem("userToken", data.accessToken);
+    localStorage.setItem("playType", data.playType);
     showToast("Logged In Successfully!!", "blue");
     afterLogin();
   }
@@ -74,7 +79,8 @@ function searchMusic() {
       .then((data) => data.json())
       .then((songs) => {
         loadMusic(songs);
-      });
+      })
+      .catch((err) => console.log(err));
   };
 }
 
@@ -88,6 +94,9 @@ function fetchMusic() {
     .then((response) => response.json())
     .then((songs) => {
       loadMusic(songs);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 
@@ -149,6 +158,9 @@ function addToPlaylist(id) {
       loadPlaylist(songs);
       PLAYLIST = songs;
       showToast("Added to the Playlist", "blue");
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 
@@ -162,6 +174,9 @@ function fetchPlayList() {
     .then((response) => response.json())
     .then((playlists) => {
       loadPlaylist(playlists);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 
@@ -200,6 +215,22 @@ function loadPlaylist(playlists) {
     </tr>`;
     document.getElementById("playSongs").style.visibility = "hidden";
   }
+  if (localStorage.getItem("playType") === "ORDER") {
+    playTypeButtonIcon.classList.remove("fa", "fa-repeat");
+    playTypeButtonIcon.classList.remove("fa", "fa-random");
+    playTypeButtonIcon.classList.add("fa", "fa-arrow-right");
+    playTypeButton.title = "Order Play";
+  } else if (localStorage.getItem("playType") === "SHUFFLE") {
+    playTypeButtonIcon.classList.remove("fa", "fa-arrow-right");
+    playTypeButtonIcon.classList.remove("fa", "fa-repeat");
+    playTypeButtonIcon.classList.add("fa", "fa-random");
+    playTypeButton.title = "Shuffle Play";
+  } else if (localStorage.getItem("playType") === "REPEAT") {
+    playTypeButtonIcon.classList.remove("fa", "fa-arrow-right");
+    playTypeButtonIcon.classList.remove("fa", "fa-random");
+    playTypeButtonIcon.classList.add("fa", "fa-repeat");
+    playTypeButton.title = "Repeat Play";
+  }
   document.getElementById("playlist").innerHTML = html;
   PLAYLIST = playlists;
   setSong(0);
@@ -223,6 +254,9 @@ function removeFromPlaylist(id) {
       loadPlaylist(songs);
       PLAYLIST = songs;
       showToast("Song removed from Playlist", "red");
+    })
+    .catch((err) => {
+      console.log(err);
     });
 }
 
@@ -248,8 +282,8 @@ function notLogin() {
 
 const previousButton = document.getElementById("previous");
 const nextButton = document.getElementById("next");
-const repeatButton = document.getElementById("repeat");
-const shuffleButton = document.getElementById("shuffle");
+const playTypeButton = document.getElementById("playTypeButton");
+const playTypeButtonIcon = document.getElementById("playTypeButtonIcon");
 const audio = document.getElementById("audio");
 const pauseButton = document.getElementById("pause");
 const playButton = document.getElementById("play");
@@ -260,7 +294,6 @@ const progressBar = document.getElementById("progress-bar");
 const currentProgress = document.getElementById("current-progress");
 
 let index = 0;
-let loop = true;
 
 // formatting time
 const timeFormatter = (timeInput) => {
@@ -273,7 +306,6 @@ const timeFormatter = (timeInput) => {
 
 // setting Song
 const setSong = (arrayIndex) => {
-  console.log(arrayIndex);
   let { title, urlPath } = PLAYLIST[arrayIndex];
   audio.src = SERVER_ROOT + "/" + urlPath;
   songTitle.innerHTML = title;
@@ -296,36 +328,44 @@ const playThis = (id) => {
   playAudio();
 };
 
-//repeat button
-repeatButton.addEventListener("click", () => {
-  if (repeatButton.classList.contains("active")) {
-    repeatButton.classList.remove("active");
-    repeatButton.style.background = "none";
-    audio.loop = false;
-    showToast("Repeat Off", "black");
-  } else {
-    repeatButton.classList.add("active");
-    repeatButton.style.background = "lightgreen";
-    audio.loop = true;
+playTypeButton.addEventListener("click", () => {
+  if (localStorage.getItem("playType") === "ORDER") {
+    localStorage.setItem("playType", "SHUFFLE");
+    playTypeButtonIcon.classList.remove("fa", "fa-arrow-right");
+    playTypeButtonIcon.classList.add("fa", "fa-random");
+    playTypeButton.title = "Shuffle Play";
+    showToast("Shuffle On", "green");
+    playAudio();
+  } else if (localStorage.getItem("playType") === "SHUFFLE") {
+    localStorage.setItem("playType", "REPEAT");
+    playTypeButtonIcon.classList.remove("fa", "fa-random");
+    playTypeButtonIcon.classList.add("fa", "fa-repeat");
+    playTypeButton.title = "Repeat Play";
     showToast("Repeat On", "green");
+    playAudio();
+  } else if (localStorage.getItem("playType") === "REPEAT") {
+    localStorage.setItem("playType", "ORDER");
+    playTypeButtonIcon.classList.remove("fa", "fa-repeat");
+    playTypeButtonIcon.classList.add("fa", "fa-arrow-right");
+    playTypeButton.title = "Order Play";
+    showToast("Order play On", "green");
+    playAudio();
   }
 });
 
 //next song
 const nextSong = () => {
-  if (loop) {
-    if (index === PLAYLIST.length - 1) {
+  if (localStorage.getItem("playType") === "ORDER") {
+    index++;
+    if (index > PLAYLIST.length - 1) {
       index = 0;
-    } else {
-      index += 1;
     }
-    setSong(index);
-    playAudio();
-  } else {
-    let randIndex = Math.floor(Math.random() * PLAYLIST.length);
-    setSong(randIndex);
-    playAudio();
+  } else if (localStorage.getItem("playType") === "SHUFFLE") {
+    const random = Math.floor(Math.random() * PLAYLIST.length);
+    index = random;
   }
+  setSong(index);
+  playAudio();
 };
 
 //pause song
@@ -337,11 +377,14 @@ const pauseAudio = () => {
 
 //previous song
 const previousSong = () => {
-  if (index > 0) {
-    pauseAudio();
-    index -= 1;
-  } else {
-    index = PLAYLIST.length - 1;
+  if (localStorage.getItem("playType") === "ORDER") {
+    index--;
+    if (index < 0) {
+      index = PLAYLIST.length - 1;
+    }
+  } else if (localStorage.getItem("playType") === "SHUFFLE") {
+    const random = Math.floor(Math.random() * PLAYLIST.length);
+    index = random;
   }
   setSong(index);
   playAudio();
@@ -351,21 +394,6 @@ const previousSong = () => {
 audio.onended = () => {
   nextSong();
 };
-
-//Shuffle songs
-shuffleButton.addEventListener("click", () => {
-  if (shuffleButton.classList.contains("active")) {
-    shuffleButton.classList.remove("active");
-    shuffleButton.style.background = "none";
-    showToast("Shuffle Off", "black");
-    loop = true;
-  } else {
-    shuffleButton.classList.add("active");
-    shuffleButton.style.background = "lightgreen";
-    showToast("Shuffle On", "green");
-    loop = false;
-  }
-});
 
 //play button
 playButton.addEventListener("click", playAudio);
